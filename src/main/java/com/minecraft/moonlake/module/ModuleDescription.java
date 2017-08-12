@@ -30,6 +30,8 @@ public final class ModuleDescription {
     private String name;
     private String main;
     private String version;
+    private String website;
+    private String description;
     private List<String> authors;
 
     public ModuleDescription(InputStream inputStream) throws InvalidModuleDescriptionException {
@@ -38,7 +40,9 @@ public final class ModuleDescription {
             properties.load(inputStream);
             this.name = properties.getProperty("name");
             this.main = properties.getProperty("main");
-            this.version = properties.getProperty("version", "1.0.0");
+            this.version = properties.getProperty("version");
+            this.website = properties.getProperty("website");
+            this.description = properties.getProperty("description");
             {
                 String property = properties.getProperty("author", null);
                 if(property != null && !property.trim().isEmpty())
@@ -65,6 +69,14 @@ public final class ModuleDescription {
 
     public String getVersion() {
         return version;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public List<String> getAuthors() {
