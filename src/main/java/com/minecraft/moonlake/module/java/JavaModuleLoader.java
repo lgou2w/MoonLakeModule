@@ -34,7 +34,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public final class JavaModuleLoader implements ModuleLoader {
+public final class JavaModuleLoader extends ModuleLoaderBase {
 
     private final Map<String, Class<?>> classes;
     private final List<JavaModuleClassLoader> loaders;
@@ -96,11 +96,6 @@ public final class JavaModuleLoader implements ModuleLoader {
 
     @Override
     public void enableModule(Module module) {
-        enableModule(module, new ModuleExceptionConsumerBase());
-    }
-
-    @Override
-    public void enableModule(Module module, ModuleExceptionConsumer mec) {
         if(!(module instanceof JavaModule))
             throw new IllegalArgumentException("模块对象与当前模块类加载器无关.");
         if(!module.isEnable()) {
@@ -112,19 +107,13 @@ public final class JavaModuleLoader implements ModuleLoader {
             try {
                 javaModule.setEnable(true);
             } catch (Exception e) {
-                if(mec != null)
-                    mec.accept(e);
+                handlerException(e);
             }
         }
     }
 
     @Override
     public void disableModule(Module module) {
-        disableModule(module, new ModuleExceptionConsumerBase());
-    }
-
-    @Override
-    public void disableModule(Module module, ModuleExceptionConsumer mec) {
         if(!(module instanceof JavaModule))
             throw new IllegalArgumentException("模块对象与当前模块类加载器无关.");
         if(module.isEnable()) {
@@ -134,8 +123,7 @@ public final class JavaModuleLoader implements ModuleLoader {
             try {
                 javaModule.setEnable(false);
             } catch (Exception e) {
-                if(mec != null)
-                    mec.accept(e);
+                handlerException(e);
             }
             if(classLoader instanceof JavaModuleClassLoader) {
                 JavaModuleClassLoader loader = (JavaModuleClassLoader) classLoader;

@@ -41,23 +41,13 @@ public interface ModuleManager {
 
     Module[] loadModules(File rootDir);
 
-    Module[] loadModules(File rootDir, ModuleExceptionConsumer mec);
-
     void enableModule(Module module);
-
-    void enableModule(Module module, ModuleExceptionConsumer mec);
 
     void enableModules();
 
-    void enableModules(ModuleExceptionConsumer mec);
-
     void disableModule(Module module);
 
-    void disableModule(Module module, ModuleExceptionConsumer mec);
-
     void disableModules();
-
-    void disableModules(ModuleExceptionConsumer mec);
 
     void clearModules();
 }

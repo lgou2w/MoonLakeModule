@@ -15,10 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.minecraft.moonlake.module;
 
-public interface ModuleExceptionConsumer {
+public abstract class ModuleLoaderBase implements ModuleLoader {
 
-    void accept(Exception e);
+    public ModuleLoaderBase() {
+    }
+
+    /** Handle Module Loader Exception */
+    protected void handlerException(Exception e) {
+        e.printStackTrace();
+    }
 }

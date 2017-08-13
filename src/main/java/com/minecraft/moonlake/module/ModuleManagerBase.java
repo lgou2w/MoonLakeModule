@@ -15,16 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.minecraft.moonlake.module;
 
-public class ModuleExceptionConsumerBase implements ModuleExceptionConsumer {
+public abstract class ModuleManagerBase implements ModuleManager {
 
-    public ModuleExceptionConsumerBase() {
+    public ModuleManagerBase() {
     }
 
-    @Override
-    public void accept(Exception e) {
+    /** Handle Module Manager Exception */
+    protected void handlerException(Exception e) {
         e.printStackTrace();
     }
 }

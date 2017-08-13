@@ -31,9 +31,5 @@ public interface ModuleLoader {
 
     void enableModule(Module module);
 
-    void enableModule(Module module, ModuleExceptionConsumer mec);
-
     void disableModule(Module module);
-
-    void disableModule(Module module, ModuleExceptionConsumer mec);
 }

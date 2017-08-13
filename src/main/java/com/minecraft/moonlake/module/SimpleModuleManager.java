@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SimpleModuleManager implements ModuleManager {
+public class SimpleModuleManager extends ModuleManagerBase {
 
     private final List<Module> modules;
     private final ModuleLoaderFactory loaderFactory;
@@ -86,11 +86,6 @@ public class SimpleModuleManager implements ModuleManager {
 
     @Override
     public Module[] loadModules(File rootDir) {
-        return loadModules(rootDir, new ModuleExceptionConsumerBase());
-    }
-
-    @Override
-    public Module[] loadModules(File rootDir, ModuleExceptionConsumer mec) {
         Validate.notNull(rootDir, "模块文件目录对象不能为 null 值.");
         Validate.isTrue(rootDir.isDirectory(), "模块文件目录对象并不是目录文件.");
         File[] moduleFiles = rootDir.listFiles();
@@ -102,8 +97,7 @@ public class SimpleModuleManager implements ModuleManager {
             try {
                 module = loadModule(moduleFile);
             } catch (ModuleException e) {
-                if(mec != null)
-                    mec.accept(e);
+                handlerException(e);
             }
             if(module == null)
                 continue;
@@ -114,56 +108,34 @@ public class SimpleModuleManager implements ModuleManager {
 
     @Override
     public void enableModule(Module module) {
-        enableModule(module, new ModuleExceptionConsumerBase());
-    }
-
-    @Override
-    public void enableModule(Module module, ModuleExceptionConsumer mec) {
         if(module != null && !module.isEnable()) try {
-            module.getLoader().enableModule(module, mec);
+            module.getLoader().enableModule(module);
         } catch (Exception e) {
-            if(mec != null)
-                mec.accept(e);
+            handlerException(e);
         }
     }
 
     @Override
     public void enableModules() {
-        enableModules(new ModuleExceptionConsumerBase());
-    }
-
-    @Override
-    public void enableModules(ModuleExceptionConsumer mec) {
         Module[] modules = getModules();
         for(int i = 0; i < modules.length; i++)
-            enableModule(modules[i], mec);
+            enableModule(modules[i]);
     }
 
     @Override
     public void disableModule(Module module) {
-        disableModule(module, new ModuleExceptionConsumerBase());
-    }
-
-    @Override
-    public void disableModule(Module module, ModuleExceptionConsumer mec) {
         if(module != null && module.isEnable()) try {
-            module.getLoader().disableModule(module, mec);
+            module.getLoader().disableModule(module);
         } catch (Exception e) {
-            if(mec != null)
-                mec.accept(e);
+            handlerException(e);
         }
     }
 
     @Override
     public void disableModules() {
-        disableModules(new ModuleExceptionConsumerBase());
-    }
-
-    @Override
-    public void disableModules(ModuleExceptionConsumer mec) {
         Module[] modules = getModules();
         for(int i = modules.length - 1; i >= 0; i--)
-            disableModule(modules[i], mec);
+            disableModule(modules[i]);
     }
 
     @Override
